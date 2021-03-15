@@ -1,10 +1,7 @@
-FROM debian:10
+FROM golang:buster
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
-
-# The version of Go Lang install found at https://golang.org/dl/
-ARG GO_VERSION=1.16
 
 # Latest version of Terraform may be found at https://www.terraform.io/downloads.html
 ARG TERRAFORM_VERSION=0.14.7
@@ -35,13 +32,6 @@ RUN apt-get update \
         python3-pip \
         lsb-release 2>&1
 
-# Install Go
-RUN curl -sSL -o /tmp/downloads/golang.tar.gz https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz  \
-    && tar -C /usr/local -xzf /tmp/downloads/golang.tar.gz
-
-ENV GOPATH=/usr/local/go
-ENV PATH=$PATH:$GOPATH/bin
-
 # Install the Azure CLI
 RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list \
     && curl -sL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - 2>/dev/null \
@@ -54,6 +44,10 @@ RUN curl -sSL -o /tmp/downloads/terraform.zip https://releases.hashicorp.com/ter
     && unzip /tmp/downloads/terraform.zip \
     && mv terraform /usr/local/bin
 
+# Install go-getter
+RUN go get github.com/hashicorp/go-getter \
+    && go install github.com/hashicorp/go-getter/cmd/go-getter@latest
+
 # Clean up
 RUN apt-get autoremove -y \
     && apt-get clean -y \
@@ -65,7 +59,6 @@ ENV DEBIAN_FRONTEND=dialog
 
 # Setup the required shell files
 RUN mkdir -p /azgitops
-COPY ./runtime/sync.sh /azgitops
-COPY ./bicep/main.bicep /azgitops
+COPY ./sync.sh /azgitops
 
 ENTRYPOINT [ "sh", "/azgitops/sync.sh" ]
