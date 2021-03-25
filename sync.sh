@@ -17,6 +17,7 @@ az login --identity
 # -g $AZ_RG_NAME \
 # --set tags.Environment='Test'
 
-az deployment create \
+az deployment sub create \
 --name AzureGitOps \
+--location westus2 \
 --template-file /azgitops/src/$GIT_BOOTSTRAP_PATH
