@@ -29,8 +29,9 @@ az container create \
 -g cdw-azgitops-master-20210324 \
 -n cdw-azgitops-20210324 \
 --image cwiederspan/azgitops:latest \
---cpu 1 \
---memory 1 \
+--cpu 0.5 \
+--memory 0.5 \
+--restart-policy Never \
 --assign-identity '/subscriptions/ssssssss-ssss-ssss-ssss-ssssssssssss/resourcegroups/cdw-azgitops-master-20210324/providers/Microsoft.ManagedIdentity/userAssignedIdentities/cdw-gitops-20210324-msi' \
 --environment-variables \
   'GIT_REPO_URI'='github.com/cwiederspan/az-gitops-src-poc' \
