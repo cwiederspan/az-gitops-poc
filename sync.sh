@@ -10,7 +10,12 @@ go-getter $GIT_REPO_URI /azgitops/src
 
 az login --identity
 
-az deployment sub create \
+# az deployment group create \
+# --name AzureGitOps \
+# --location westus2 \
+# --template-file /azgitops/src/$GIT_BOOTSTRAP_PATH
+
+az deployment group create \
 --name AzureGitOps \
---location westus2 \
+--resource-group $AZ_RG_NAME \
 --template-file /azgitops/src/$GIT_BOOTSTRAP_PATH
