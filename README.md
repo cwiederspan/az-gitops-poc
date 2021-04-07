@@ -38,3 +38,17 @@ az container create \
   'GIT_BOOTSTRAP_PATH'='main.bicep'
 
 ```
+
+# Vision
+
+```bash
+
+az gitops group create \
+ -n cdw-azgitops-master-20210324 \
+ -l westus2 \
+ -git-repo 'github.com/cwiederspan/az-gitops-src-poc' \
+ -git-branch 'main' \
+ -git-path 'group/main.bicep' \
+ -interval '5m'
+ 
+```
